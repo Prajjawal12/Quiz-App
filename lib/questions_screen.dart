@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/answer_button.dart';
 import 'package:quiz_app/data/questions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quiz_app/questions_screen.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key});
+  const QuestionsScreen(this.onSelectAnswer, {super.key});
+  final void Function(String answer) onSelectAnswer;
   @override
   State<QuestionsScreen> createState() {
     return _QuestionScreenState();
@@ -13,7 +15,8 @@ class QuestionsScreen extends StatefulWidget {
 
 class _QuestionScreenState extends State<QuestionsScreen> {
   var currentQuestionIndex = 0;
-  void changeQuestion() {
+  void changeQuestion(String selectedAnswer) {
+    widget.onSelectAnswer(selectedAnswer);
     print("Changing Question");
     setState(() {
       currentQuestionIndex = currentQuestionIndex + 1;
@@ -47,7 +50,9 @@ class _QuestionScreenState extends State<QuestionsScreen> {
             ),
             ...currentQuestion.getShuffledAnswers().map(
               (e) {
-                return AnswerButton(e, changeQuestion);
+                return AnswerButton(e, () {
+                  changeQuestion(e);
+                });
               },
             ),
             // AnswerButton(
